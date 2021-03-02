@@ -10,8 +10,3 @@ env.sh -- docker 和 docker-compose 自动安装脚本
 env.tar.gz -- 脚本初始化资源包  
 
 ##### 原项目地址 -- moyada/stealer，感谢原作者！
-
-### 小程序Demo
-![全能短视频去水印](pic_qocode.png)
-
-![全能短视频去水印](pic_effect.jpg)
