@@ -1,0 +1,49 @@
+﻿version: '3.8'
+
+networks:
+  stealer-net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.238.0/24
+          gateway: 172.16.238.1
+
+services:
+  stealer:
+    build:
+      context: ./code
+      dockerfile: Dockerfile
+    container_name: stealer.RUNNING
+    image: stealer:1.0.0
+    restart: always
+    #ports:
+    #  - "8000:8000"
+    expose:
+      - "8000"
+    volumes:
+      - /etc/localtime:/etc/localtime
+    networks:
+      stealer-net:
+        ipv4_address: 172.16.238.5
+    privileged: true
+
+  nginx:
+    container_name: stealer.nginx
+    image: nginx:1.18.0
+    restart: always
+    ports:
+      - "443:443"
+    volumes:
+      #- /etc/localtime:/etc/localtime
+      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/logs:/var/log/nginx
+      - ./nginx/key/cert.crt:/usr/data/app/system/nginx/cert.crt #https证书
+      - ./nginx/key/cert.key:/usr/data/app/system/nginx/cert.key #https密钥
+    #network_mode: host
+    networks:
+      stealer-net:
+        ipv4_address: 172.16.238.6
+    depends_on:
+      - stealer
+    privileged: true
